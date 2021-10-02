@@ -13,6 +13,7 @@ add_library(qtwpe MODULE
     WPEQmlExtensionPlugin.cpp
     WPEQtView.cpp
     WPEQtViewLoadRequest.cpp
+    WPEQtImContext.cpp
 )
 set_target_properties(qtwpe PROPERTIES
     OUTPUT_NAME qtwpe
