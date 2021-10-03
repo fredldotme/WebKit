@@ -111,6 +111,8 @@ void WPEQtView::createWebView()
         "settings", settings, nullptr));
     g_clear_object(&settings);
 
+    m_backend->setScaleFactor(window()->devicePixelRatio());
+
     m_imContext = wpeqt_im_context_new(this);
     webkit_web_view_set_input_method_context(m_webView, m_imContext);
 
