@@ -516,6 +516,7 @@ void WPEQtView::keyReleaseEvent(QKeyEvent* event)
 
 void WPEQtView::touchEvent(QTouchEvent* event)
 {
+    forceActiveFocus();
     if (m_backend)
         m_backend->dispatchTouchEvent(event);
 }
