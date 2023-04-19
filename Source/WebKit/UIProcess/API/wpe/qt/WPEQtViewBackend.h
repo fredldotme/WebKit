@@ -34,6 +34,8 @@
 #include <wpe/fdo-egl.h>
 #include <wpe/fdo.h>
 
+#include <memory>
+
 class WPEQtView;
 
 class Q_DECL_EXPORT WPEQtViewBackend {
