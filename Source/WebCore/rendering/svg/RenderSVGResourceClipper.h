@@ -34,7 +34,13 @@ struct ClipperData {
     WTF_MAKE_STRUCT_FAST_ALLOCATED;
 
     struct Inputs {
-        bool operator==(const Inputs& other) const = default;
+        bool operator==(const Inputs& other) const {
+          return objectBoundingBox == other.objectBoundingBox &&
+                 clippedContentBounds == other.clippedContentBounds &&
+                 scale == other.scale &&
+                 effectiveZoom == other.effectiveZoom &&
+                 paintingDisabled == other.paintingDisabled;
+        };
         bool operator!=(const Inputs& other) const { return !(*this == other); }
 
         FloatRect objectBoundingBox;
