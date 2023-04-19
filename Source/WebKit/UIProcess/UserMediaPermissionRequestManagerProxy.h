@@ -21,6 +21,7 @@
 
 #include "UserMediaPermissionCheckProxy.h"
 #include "UserMediaPermissionRequestProxy.h"
+#include "API/APIUIClient.h"
 #include <WebCore/MediaProducer.h>
 #include <WebCore/PermissionDescriptor.h>
 #include <WebCore/PermissionState.h>
@@ -43,6 +44,8 @@ struct CaptureDeviceWithCapabilities;
 struct ClientOrigin;
 struct MediaConstraints;
 struct MediaStreamRequest;
+
+using MediaProducerMediaStateFlags = OptionSet<MediaProducerMediaState>;
 };
 
 namespace WebKit {

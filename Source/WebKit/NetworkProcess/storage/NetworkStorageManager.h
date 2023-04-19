@@ -40,9 +40,13 @@
 #include <WebCore/DOMCacheEngine.h>
 #include <WebCore/FileSystemHandleIdentifier.h>
 #include <WebCore/FileSystemSyncAccessHandleIdentifier.h>
+#include <WebCore/IDBKeyPath.h>
+#include <WebCore/IDBRequestData.h>
 #include <WebCore/IDBResourceIdentifier.h>
+#include <WebCore/IDBObjectStoreInfo.h>
 #include <WebCore/IndexedDB.h>
 #include <WebCore/ServiceWorkerTypes.h>
+#include <WebCore/PrivateHeaders/WebCore/IDBResourceIdentifier.h>
 #include <pal/SessionID.h>
 #include <wtf/Forward.h>
 #include <wtf/ThreadSafeWeakHashSet.h>
@@ -56,7 +60,6 @@ class IDBCursorInfo;
 class IDBKeyData;
 class IDBIndexInfo;
 class IDBObjectStoreInfo;
-class IDBRequestData;
 class IDBTransactionInfo;
 class IDBValue;
 class ServiceWorkerRegistrationKey;

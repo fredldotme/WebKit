@@ -85,6 +85,8 @@ enum class PermissionName : uint8_t;
 enum class ThirdPartyCookieBlockingMode : uint8_t;
 using FramesPerSecond = unsigned;
 using PlatformDisplayID = uint32_t;
+enum class MediaProducerMutedState : uint8_t;
+using MediaProducerMutedStateFlags = OptionSet<MediaProducerMutedState>;
 }
 
 namespace WTF {

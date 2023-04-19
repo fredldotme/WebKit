@@ -116,6 +116,9 @@ set(WebKit_PRIVATE_INCLUDE_DIRECTORIES
     "${WEBKIT_DIR}/WebProcess/WebPage/RemoteLayerTree"
     "${WEBKIT_DIR}/WebProcess/WebStorage"
     "${WEBKIT_DIR}/WebProcess/XR"
+    "${WEBCORE_DIR}/page"
+    "${WEBCORE_DIR}/platform"
+    "${WEBCORE_DIR}/Modules/indexeddb"
     "${CMAKE_SOURCE_DIR}/Source"
     "${CMAKE_SOURCE_DIR}/WebKitLibraries"
 )
