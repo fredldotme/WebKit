@@ -250,7 +250,7 @@ void WPEQtViewBackend::dispatchHoverMoveEvent(QHoverEvent* event)
     uint32_t state = !!m_mousePressedButton;
     struct wpe_input_pointer_event wpeEvent = { wpe_input_pointer_event_type_motion,
         static_cast<uint32_t>(event->timestamp()),
-        event->pos().x() * m_scale, event->pos().y() * m_scale,
+        int(event->pos().x() * m_scale), int(event->pos().y() * m_scale),
         m_mousePressedButton, state, modifiers() };
     wpe_view_backend_dispatch_pointer_event(backend(), &wpeEvent);
 }
@@ -276,7 +276,7 @@ void WPEQtViewBackend::dispatchMousePressEvent(QMouseEvent* event)
     m_mouseModifiers |= modifier;
     struct wpe_input_pointer_event wpeEvent = { wpe_input_pointer_event_type_button,
         static_cast<uint32_t>(event->timestamp()),
-        event->x() * m_scale, event->y() * m_scale, button, state, modifiers() };
+        int(event->x() * m_scale), int(event->y() * m_scale), button, state, modifiers() };
     wpe_view_backend_dispatch_pointer_event(backend(), &wpeEvent);
 }
 
@@ -301,7 +301,7 @@ void WPEQtViewBackend::dispatchMouseReleaseEvent(QMouseEvent* event)
     m_mouseModifiers &= ~modifier;
     struct wpe_input_pointer_event wpeEvent = { wpe_input_pointer_event_type_button,
         static_cast<uint32_t>(event->timestamp()),
-        event->x() * m_scale, event->y() * m_scale, button, state, modifiers() };
+        int(event->x() * m_scale), int(event->y() * m_scale), button, state, modifiers() };
     wpe_view_backend_dispatch_pointer_event(backend(), &wpeEvent);
 }
 
@@ -398,7 +398,7 @@ void WPEQtViewBackend::dispatchTouchEvent(QTouchEvent* event)
     struct wpe_input_touch_event_raw* rawEvents = g_new0(wpe_input_touch_event_raw, event->touchPoints().length());
     for (auto& point : event->touchPoints()) {
         rawEvents[i] = { eventType, static_cast<uint32_t>(event->timestamp()),
-            point.id(), static_cast<int32_t>(point.pos().x()), static_cast<int32_t>(point.pos().y()) };
+            point.id(), static_cast<int32_t>(point.pos().x() * m_scale), static_cast<int32_t>(point.pos().y() * m_scale) };
         i++;
     }
 
