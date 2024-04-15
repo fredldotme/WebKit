@@ -557,6 +557,7 @@ if (ENABLE_WPE_QT_API)
         ${WEBKIT_DIR}/UIProcess/API/wpe/qt/WPEQmlExtensionPlugin.cpp
         ${WEBKIT_DIR}/UIProcess/API/wpe/qt/WPEQtView.cpp
         ${WEBKIT_DIR}/UIProcess/API/wpe/qt/WPEQtViewLoadRequest.cpp
+        ${WEBKIT_DIR}/UIProcess/API/wpe/qt/WPEQtImContext.cpp
     )
 
     set(qtwpe_LIBRARIES
