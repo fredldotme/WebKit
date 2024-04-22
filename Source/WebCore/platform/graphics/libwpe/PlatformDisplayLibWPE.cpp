@@ -33,7 +33,7 @@
 #if USE(LIBEPOXY)
 // FIXME: For now default to the GBM EGL platform, but this should really be
 // somehow deducible from the build configuration.
-#define __GBM__ 1
+//#define __GBM__ 1
 #include <epoxy/egl.h>
 #else
 #if PLATFORM(WAYLAND)

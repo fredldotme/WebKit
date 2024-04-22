@@ -91,6 +91,8 @@
 #include <WebCore/CairoUtilities.h>
 #endif
 
+#include <iostream>
+
 #define RELEASE_LOG_SESSION_ID (m_sessionID ? m_sessionID->toUInt64() : 0)
 #define WEBPROCESS_RELEASE_LOG(channel, fmt, ...) RELEASE_LOG(channel, "%p - [sessionID=%" PRIu64 "] WebProcess::" fmt, this, RELEASE_LOG_SESSION_ID, ##__VA_ARGS__)
 #define WEBPROCESS_RELEASE_LOG_ERROR(channel, fmt, ...) RELEASE_LOG_ERROR(channel, "%p - [sessionID=%" PRIu64 "] WebProcess::" fmt, this, RELEASE_LOG_SESSION_ID, ##__VA_ARGS__)
@@ -134,9 +136,14 @@ void WebProcess::platformInitializeWebProcess(WebProcessCreationParameters& para
 
 #if PLATFORM(WPE)
     m_dmaBufRendererBufferMode = parameters.dmaBufRendererBufferMode;
+
+    std::cout << "INIT: " << (!parameters.isServiceWorkerProcess && m_dmaBufRendererBufferMode.isEmpty()) << std::endl;
+
     if (!parameters.isServiceWorkerProcess && m_dmaBufRendererBufferMode.isEmpty()) {
         auto& implementationLibraryName = parameters.implementationLibraryName;
-        if (!implementationLibraryName.isNull() && implementationLibraryName.data()[0] != '\0')
+        if (getenv("WEBKIT_WPE_BACKEND"))
+            wpe_loader_init(getenv("WEBKIT_WPE_BACKEND"));
+        else if (!implementationLibraryName.isNull() && implementationLibraryName.data()[0] != '\0')
             wpe_loader_init(parameters.implementationLibraryName.data());
 
         RELEASE_ASSERT(is<PlatformDisplayLibWPE>(PlatformDisplay::sharedDisplay()));

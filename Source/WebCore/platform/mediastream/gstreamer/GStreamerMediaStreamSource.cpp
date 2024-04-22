@@ -566,7 +566,9 @@ private:
             memset(data.data() + yOffset, 128, data.size() - yOffset);
         }
         gst_buffer_add_video_meta_full(buffer.get(), GST_VIDEO_FRAME_FLAG_NONE, GST_VIDEO_FORMAT_I420, width, height, 3, info.offset, info.stride);
+#if GST_CHECK_VERSION(1, 18, 0)
         GST_BUFFER_DTS(buffer.get()) = GST_BUFFER_PTS(buffer.get()) = gst_element_get_current_running_time(m_parent);
+#endif
         auto sample = adoptGRef(gst_sample_new(buffer.get(), m_blackFrameCaps.get(), nullptr, nullptr));
         pushSample(WTFMove(sample), "Pushing black video frame");
     }
@@ -581,7 +583,9 @@ private:
         }
 
         auto buffer = adoptGRef(gst_buffer_new_and_alloc(512));
+#if GST_CHECK_VERSION(1, 18, 0)
         GST_BUFFER_DTS(buffer.get()) = GST_BUFFER_PTS(buffer.get()) = gst_element_get_current_running_time(m_parent);
+#endif
         GstAudioInfo info;
         gst_audio_info_from_caps(&info, m_silentSampleCaps.get());
         {

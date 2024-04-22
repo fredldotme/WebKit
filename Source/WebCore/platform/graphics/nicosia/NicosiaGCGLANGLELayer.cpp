@@ -35,7 +35,10 @@
 #include "TextureMapperFlags.h"
 #include "TextureMapperPlatformLayerBuffer.h"
 #include "TextureMapperPlatformLayerProxyGL.h"
+
+#if USE(LIBEPOXY)
 #include <epoxy/gl.h>
+#endif
 
 #if USE(ANGLE_GBM)
 #include "GraphicsContextGLGBM.h"

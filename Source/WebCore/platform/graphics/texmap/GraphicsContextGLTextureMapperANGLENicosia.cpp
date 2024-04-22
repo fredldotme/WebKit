@@ -27,7 +27,9 @@
 #include "GraphicsContextGLTextureMapperANGLE.h"
 
 #if ENABLE(WEBGL) && USE(TEXTURE_MAPPER) && USE(NICOSIA)
+#if USE(LIBEPOXY)
 #include <epoxy/gl.h>
+#endif
 
 namespace WebCore {
 

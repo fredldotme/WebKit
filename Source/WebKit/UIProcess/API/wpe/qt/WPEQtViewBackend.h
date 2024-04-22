@@ -24,6 +24,7 @@
 #include <gbm.h>
 #include <epoxy/egl.h>
 
+#include <QElapsedTimer>
 #include <QHoverEvent>
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -33,6 +34,8 @@
 #include <QWheelEvent>
 #include <wpe/fdo-egl.h>
 #include <wpe/fdo.h>
+
+#include <memory>
 
 class WPEQtView;
 
@@ -83,4 +86,6 @@ private:
     uint32_t m_mouseModifiers { 0 };
     uint32_t m_keyboardModifiers { 0 };
     uint32_t m_mousePressedButton { 0 };
+
+    QElapsedTimer m_fpsTimer;
 };

@@ -157,7 +157,7 @@ void WPEQtViewBackend::resize(const QSizeF& newSize)
 GLuint WPEQtViewBackend::texture(QOpenGLContext* context)
 {
     if (!m_lockedImage || !hasValidSurface())
-        return 0;
+        return m_textureId;
 
     context->makeCurrent(&m_surface);
 
@@ -217,6 +217,8 @@ GLuint WPEQtViewBackend::texture(QOpenGLContext* context)
 
 void WPEQtViewBackend::displayImage(struct wpe_fdo_egl_exported_image* image)
 {
+    qDebug() << m_fpsTimer.restart();
+
     Q_ASSUME(!m_lockedImage);
     m_lockedImage = image;
     if (m_view)

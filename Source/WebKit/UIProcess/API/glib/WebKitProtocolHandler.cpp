@@ -160,9 +160,15 @@ static bool uiProcessContextIsEGL()
 
 static const char* openGLAPI()
 {
+#if USE(LIBEPOXY)
     if (epoxy_is_desktop_gl())
         return "OpenGL (libepoxy)";
     return "OpenGL ES 2 (libepoxy)";
+#elif USE(ANGLE_EGL)
+    return "OpenGL ES 2 (ANGLE)";
+#else
+    return "OpenGL (unknown)";
+#endif
 }
 
 #if PLATFORM(GTK) || (PLATFORM(WPE) && ENABLE(WPE_PLATFORM))
@@ -309,6 +315,7 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
     };
 
     auto addEGLInfo = [&](auto& jsonObject) {
+#if USE(LIBEPOXY)
         addTableRow(jsonObject, "GL_RENDERER"_s, String::fromUTF8(reinterpret_cast<const char*>(glGetString(GL_RENDERER))));
         addTableRow(jsonObject, "GL_VENDOR"_s, String::fromUTF8(reinterpret_cast<const char*>(glGetString(GL_VENDOR))));
         addTableRow(jsonObject, "GL_VERSION"_s, String::fromUTF8(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
@@ -336,6 +343,7 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
         addTableRow(jsonObject, "EGL_VERSION"_s, String::fromUTF8(eglQueryString(eglDisplay, EGL_VERSION)));
         addTableRow(jsonObject, "EGL_VENDOR"_s, String::fromUTF8(eglQueryString(eglDisplay, EGL_VENDOR)));
         addTableRow(jsonObject, "EGL_EXTENSIONS"_s, makeString(eglQueryString(nullptr, EGL_EXTENSIONS), ' ', eglQueryString(eglDisplay, EGL_EXTENSIONS)));
+#endif
     };
 
     auto jsonObject = JSON::Object::create();
@@ -477,8 +485,10 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
 #endif
         addTableRow(hardwareAccelerationObject, "Native interface"_s, uiProcessContextIsEGL() ? "EGL"_s : "None"_s);
 
+#if USE(LIBEPOXY)
         if (uiProcessContextIsEGL() && eglGetCurrentContext() != EGL_NO_CONTEXT)
             addEGLInfo(hardwareAccelerationObject);
+#endif
     }
 
     stopTable();

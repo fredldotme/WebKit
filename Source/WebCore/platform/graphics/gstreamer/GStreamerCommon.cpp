@@ -497,6 +497,7 @@ void deinitializeGStreamer()
     teardownGStreamerImageDecoders();
 #endif
 
+#if GST_CHECK_VERSION(1, 18, 0)
     bool isLeaksTracerActive = false;
     auto activeTracers = gst_tracing_get_active_tracers();
     while (activeTracers) {
@@ -508,6 +509,7 @@ void deinitializeGStreamer()
 
     if (!isLeaksTracerActive)
         return;
+#endif
 
     // Make sure there is no active pipeline left. Those might trigger deadlocks during gst_deinit().
     {
@@ -899,6 +901,7 @@ PlatformVideoColorSpace videoColorSpaceFromInfo(const GstVideoInfo& info)
     case GST_VIDEO_TRANSFER_BT709:
         colorSpace.transfer = PlatformVideoTransferCharacteristics::Bt709;
         break;
+#if GST_CHECK_VERSION(1, 18, 0)
     case GST_VIDEO_TRANSFER_BT601:
         colorSpace.transfer = PlatformVideoTransferCharacteristics::Smpte170m;
         break;
@@ -914,6 +917,7 @@ PlatformVideoColorSpace videoColorSpaceFromInfo(const GstVideoInfo& info)
     case GST_VIDEO_TRANSFER_BT2020_12:
         colorSpace.transfer = PlatformVideoTransferCharacteristics::Bt2020_12bit;
         break;
+#endif
     case GST_VIDEO_TRANSFER_GAMMA10:
         colorSpace.transfer = PlatformVideoTransferCharacteristics::Linear;
         break;
@@ -1029,6 +1033,7 @@ void fillVideoInfoColorimetryFromColorSpace(GstVideoInfo* info, const PlatformVi
         case PlatformVideoTransferCharacteristics::Bt709:
             GST_VIDEO_INFO_COLORIMETRY(info).transfer = GST_VIDEO_TRANSFER_BT709;
             break;
+#if GST_CHECK_VERSION(1, 18, 0)
         case PlatformVideoTransferCharacteristics::Smpte170m:
             GST_VIDEO_INFO_COLORIMETRY(info).transfer = GST_VIDEO_TRANSFER_BT601;
             break;
@@ -1044,6 +1049,7 @@ void fillVideoInfoColorimetryFromColorSpace(GstVideoInfo* info, const PlatformVi
         case PlatformVideoTransferCharacteristics::Bt2020_12bit:
             GST_VIDEO_INFO_COLORIMETRY(info).transfer = GST_VIDEO_TRANSFER_BT2020_12;
             break;
+#endif
         case PlatformVideoTransferCharacteristics::Linear:
             GST_VIDEO_INFO_COLORIMETRY(info).transfer = GST_VIDEO_TRANSFER_GAMMA10;
             break;

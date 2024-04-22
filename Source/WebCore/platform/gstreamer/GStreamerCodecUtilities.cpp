@@ -174,8 +174,10 @@ static std::pair<GRefPtr<GstCaps>, GRefPtr<GstCaps>> vpxCapsFromCodecString(cons
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_BT709;
     else if (transfer == VPConfigurationTransferCharacteristics::BT_470_7_BG)
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_GAMMA28;
+#if GST_CHECK_VERSION(1, 18, 0)
     else if (transfer == VPConfigurationTransferCharacteristics::BT_601_7)
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_BT601;
+#endif
     else if (transfer == VPConfigurationTransferCharacteristics::SMPTE_ST_240)
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_SMPTE240M;
     else if (transfer == VPConfigurationTransferCharacteristics::Linear)
@@ -189,7 +191,9 @@ static std::pair<GRefPtr<GstCaps>, GRefPtr<GstCaps>> vpxCapsFromCodecString(cons
     else if (transfer == VPConfigurationTransferCharacteristics::IEC_61966_2_1) {
         GST_WARNING("VPConfigurationTransferCharacteristics::IEC_61966_2_1 not supported");
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_UNKNOWN;
-    } else if (transfer == VPConfigurationTransferCharacteristics::BT_2020_10bit)
+    }
+#if GST_CHECK_VERSION(1, 18, 0)
+    else if (transfer == VPConfigurationTransferCharacteristics::BT_2020_10bit)
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_BT2020_10;
     else if (transfer == VPConfigurationTransferCharacteristics::BT_2020_12bit)
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_BT2020_12;
@@ -200,6 +204,7 @@ static std::pair<GRefPtr<GstCaps>, GRefPtr<GstCaps>> vpxCapsFromCodecString(cons
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_UNKNOWN;
     } else if (transfer == VPConfigurationTransferCharacteristics::BT_2100_HLG)
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_ARIB_STD_B67;
+#endif
 
     auto matrix = parameters->matrixCoefficients;
     if (matrix == VPConfigurationMatrixCoefficients::Identity)

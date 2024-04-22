@@ -24,6 +24,8 @@
 
 #if USE(LIBEPOXY)
 #include <epoxy/gl.h>
+#elif USE(ANGLE_EGL)
+#include "ANGLEHeaders.h"
 #else
 #include <GLES3/gl3.h>
 #endif

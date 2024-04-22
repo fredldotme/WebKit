@@ -52,7 +52,7 @@ public:
     ~WPEQtView();
     QSGNode* updatePaintNode(QSGNode*, UpdatePaintNodeData*) final;
 
-    void triggerUpdate() { QMetaObject::invokeMethod(this, "update"); };
+    void triggerUpdate() { update(); };
 
     QUrl url() const;
     void setUrl(const QUrl&);

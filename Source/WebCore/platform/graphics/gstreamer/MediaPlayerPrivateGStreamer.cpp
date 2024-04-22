@@ -535,7 +535,9 @@ bool MediaPlayerPrivateGStreamer::doSeek(const SeekTarget& target, float rate)
 
     auto seekStart = toGstClockTime(startTime);
     auto seekStop = toGstClockTime(endTime);
+#if GST_CHECK_VERSION(1, 18, 0)
     GST_DEBUG_OBJECT(pipeline(), "[Seek] Performing actual seek to %" GST_TIMEP_FORMAT " (endTime: %" GST_TIMEP_FORMAT ") at rate %f", &seekStart, &seekStop, rate);
+#endif
     return gst_element_seek(m_pipeline.get(), rate, GST_FORMAT_TIME, m_seekFlags, GST_SEEK_TYPE_SET, seekStart, GST_SEEK_TYPE_SET, seekStop);
 }
 
@@ -3367,12 +3369,14 @@ static uint32_t fourccValue(GstVideoFormat format)
         return uint32_t(DMABufFormat::FourCC::BGRA8888);
     case GST_VIDEO_FORMAT_ABGR:
         return uint32_t(DMABufFormat::FourCC::RGBA8888);
+#if GST_CHECK_VERSION(1, 18, 0)
     case GST_VIDEO_FORMAT_P010_10LE:
     case GST_VIDEO_FORMAT_P010_10BE:
         return uint32_t(DMABufFormat::FourCC::P010);
     case GST_VIDEO_FORMAT_P016_LE:
     case GST_VIDEO_FORMAT_P016_BE:
         return uint32_t(DMABufFormat::FourCC::P016);
+#endif
     default:
         break;
     }
@@ -3515,9 +3519,11 @@ void MediaPlayerPrivateGStreamer::pushDMABufToCompositor()
                         offset = mem->offset + skip;
                     } else
                         object.fd[i] = { };
-
+                        
+#if GST_CHECK_VERSION(1, 18, 0)
                     gint comp[GST_VIDEO_MAX_COMPONENTS];
                     gst_video_format_info_component(videoInfo.finfo, i, comp);
+#endif
                     object.offset[i] = offset;
                     object.stride[i] = GST_VIDEO_INFO_PLANE_STRIDE(&videoInfo, i);
                     object.modifierPresent[i] = infoHasDrmFormat;

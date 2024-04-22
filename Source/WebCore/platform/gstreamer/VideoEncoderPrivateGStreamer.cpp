@@ -931,6 +931,7 @@ static void webkit_video_encoder_class_init(WebKitVideoEncoderClass* klass)
                 "temporal-scalability-rate-decimator", decimators.get(),
                 "temporal-scalability-target-bitrate", bitrates.get(), nullptr);
 
+#if GST_CHECK_VERSION(1, 18, 0)
             if (layerFlags) {
                 GValue layerSyncFlagsValue G_VALUE_INIT;
 
@@ -946,6 +947,7 @@ static void webkit_video_encoder_class_init(WebKitVideoEncoderClass* klass)
                 g_value_unset(&boolValue);
                 gst_util_set_object_arg(G_OBJECT(encoder), "temporal-scalability-layer-flags", layerFlags);
             }
+#endif
 
             ALLOW_DEPRECATED_DECLARATIONS_END;
         });
