@@ -39,7 +39,7 @@
 /* Please keep the following in alphabetical order so we can notice duplicates. */
 /* Items should only be here if they are different from the defaults in PlatformEnable.h. */
 
-#if !defined(ENABLE_KINETIC_SCROLLING) && (ENABLE(ASYNC_SCROLLING) || PLATFORM(GTK))
+#if !defined(ENABLE_KINETIC_SCROLLING) && (ENABLE(ASYNC_SCROLLING) || PLATFORM(GTK) || PLATFORM(WPE))
 #define ENABLE_KINETIC_SCROLLING 1
 #endif
 
