@@ -28,6 +28,31 @@
 #include <initializer_list>
 #include <optional>
 
+// Some undef's to avoid clashing with X.h
+#ifdef Above
+#undef Above
+#endif
+
+#ifdef Below
+#undef Below
+#endif
+
+#ifdef None
+#undef None
+#endif
+
+#ifdef Always
+#undef Always
+#endif
+
+#ifdef FocusIn
+#undef FocusIn
+#endif
+
+#ifdef FocusOut
+#undef FocusOut
+#endif
+
 namespace WTF {
 class TextStream;
 }
