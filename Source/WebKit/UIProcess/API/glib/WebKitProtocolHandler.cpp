@@ -472,6 +472,7 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
     std::unique_ptr<PlatformDisplay> renderDisplay;
     if (strcmp(policy, "never")) {
         addTableRow(jsonObject, "API"_s, String::fromUTF8(openGLAPI()));
+#if USE(LIBDRM)
 #if PLATFORM(GTK)
         if (usingDMABufRenderer) {
             addTableRow(hardwareAccelerationObject, "Renderer"_s, dmabufRendererWithSupportedBuffers());
@@ -482,6 +483,7 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
             addTableRow(hardwareAccelerationObject, "Renderer"_s, dmabufRendererWithSupportedBuffers());
             addTableRow(hardwareAccelerationObject, "Buffer format"_s, renderBufferFormat(request));
         }
+#endif
 #endif
         addTableRow(hardwareAccelerationObject, "Native interface"_s, uiProcessContextIsEGL() ? "EGL"_s : "None"_s);
 

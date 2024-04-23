@@ -242,10 +242,12 @@ View::View(struct wpe_view_backend* backend, WPEDisplay* display, const API::Pag
                 }
             }
         }), this);
+#if USE(LIBDRM)
         g_signal_connect(m_wpeView.get(), "preferred-dma-buf-formats-changed", G_CALLBACK(+[](WPEView*, gpointer userData) {
             auto& webView = *reinterpret_cast<View*>(userData);
             webView.page().preferredBufferFormatsDidChange();
         }), this);
+#endif
         m_backingStore = AcceleratedBackingStoreDMABuf::create(*m_pageProxy, m_wpeView.get());
     }
 #endif
