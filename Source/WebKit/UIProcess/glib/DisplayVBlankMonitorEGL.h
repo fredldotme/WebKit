@@ -25,53 +25,33 @@
 
 #pragma once
 
-#include <wtf/Condition.h>
-#include <wtf/FastMalloc.h>
-#include <wtf/Function.h>
-#include <wtf/Lock.h>
-#include <wtf/RunLoop.h>
+#include "DisplayVBlankMonitor.h"
+
+#if USE(LIBEPOXY)
+#include <epoxy/egl.h>
+#else
+#include <EGL/egl.h>
+#endif
 
 namespace WebKit {
 
-using PlatformDisplayID = uint32_t;
-
-class DisplayVBlankMonitor {
-    WTF_MAKE_FAST_ALLOCATED;
+class DisplayVBlankMonitorEGL final : public DisplayVBlankMonitor {
 public:
-    static std::unique_ptr<DisplayVBlankMonitor> create(PlatformDisplayID);
-    virtual ~DisplayVBlankMonitor();
-
-    enum class Type { Drm, Timer, EGL };
-    virtual Type type() const = 0;
-
-    unsigned refreshRate() const { return m_refreshRate; }
-
-    void start();
-    void stop();
-    bool isActive();
-    void invalidate();
-
-    void setHandler(Function<void()>&&);
-
-protected:
-    explicit DisplayVBlankMonitor(unsigned);
-
-    virtual bool waitForVBlank() const = 0;
-
-    unsigned m_refreshRate;
+    static std::unique_ptr<DisplayVBlankMonitor> create();
+    explicit DisplayVBlankMonitorEGL(EGLDisplay display,
+                                     PFNEGLCREATESYNCPROC create,
+                                     PFNEGLCLIENTWAITSYNCPROC wait,
+                                     PFNEGLDESTROYSYNCPROC destroy);
+    ~DisplayVBlankMonitorEGL() = default;
 
 private:
-    enum class State { Stop, Active, Failed, Invalid };
+    Type type() const override { return Type::EGL; }
+    bool waitForVBlank() const override;
 
-    bool startThreadIfNeeded();
-    void destroyThreadTimerFired();
-
-    RefPtr<Thread> m_thread;
-    Lock m_lock;
-    Condition m_condition;
-    State m_state WTF_GUARDED_BY_LOCK(m_lock) { State::Stop };
-    Function<void()> m_handler;
-    RunLoop::Timer m_destroyThreadTimer;
+    EGLDisplay m_eglDisplay;
+    PFNEGLCREATESYNCPROC m_eglCreateSyncKHR;
+    PFNEGLCLIENTWAITSYNCPROC m_eglClientWaitSyncKHR;
+    PFNEGLDESTROYSYNCPROC m_eglDestroySyncKHR;
 };
 
 } // namespace WebKit

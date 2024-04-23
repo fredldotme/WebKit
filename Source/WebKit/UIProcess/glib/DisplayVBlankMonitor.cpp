@@ -36,21 +36,35 @@
 #include "DisplayVBlankMonitorDRM.h"
 #endif
 
+#include "DisplayVBlankMonitorEGL.h"
+
 namespace WebKit {
 
 std::unique_ptr<DisplayVBlankMonitor> DisplayVBlankMonitor::create(PlatformDisplayID displayID)
 {
     static const char* forceTimer = getenv("WEBKIT_FORCE_VBLANK_TIMER");
-    if (!displayID || (forceTimer && strcmp(forceTimer, "0")))
+    if (forceTimer && strcmp(forceTimer, "0"))
         return DisplayVBlankMonitorTimer::create();
+
+    static const char* forceEGL = getenv("WEBKIT_FORCE_VBLANK_EGL");
+    if (forceEGL && strcmp(forceEGL, "0")) {
+        auto monitor = DisplayVBlankMonitorEGL::create();
+        if (monitor)
+            return monitor;
+    }
 
 #if USE(LIBDRM)
     if (auto monitor = DisplayVBlankMonitorDRM::create(displayID))
         return monitor;
-    RELEASE_LOG_FAULT(DisplayLink, "Failed to create DRM vblank monitor, falling back to timer");
+    RELEASE_LOG_FAULT(DisplayLink, "Failed to create DRM vblank monitor");
 #else
     UNUSED_PARAM(displayID);
 #endif
+
+    if (auto monitor = DisplayVBlankMonitorEGL::create())
+        return monitor;
+    RELEASE_LOG_FAULT(DisplayLink, "Failed to create EGL vblank monitor, falling back to timer");
+
     return DisplayVBlankMonitorTimer::create();
 }
 
