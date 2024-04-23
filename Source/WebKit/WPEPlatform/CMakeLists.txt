@@ -78,6 +78,7 @@ set(WPEPlatform_PRIVATE_INCLUDE_DIRECTORIES
 
 set(WPEPlatform_SYSTEM_INCLUDE_DIRECTORIES
     ${GLIB_INCLUDE_DIRS}
+    ${WAYLAND_INCLUDE_DIRS}
 )
 
 set(WPEPlatform_LIBRARIES
@@ -118,6 +119,7 @@ add_library(WPEPlatform-${WPE_API_VERSION} SHARED ${WPEPlatform_SOURCES})
 set_target_properties(WPEPlatform-${WPE_API_VERSION} PROPERTIES VERSION ${WPE_PLATFORM_VERSION} SOVERSION ${WPE_PLATFORM_VERSION_MAJOR})
 target_include_directories(WPEPlatform-${WPE_API_VERSION} PRIVATE ${WPEPlatform_PRIVATE_INCLUDE_DIRECTORIES})
 target_include_directories(WPEPlatform-${WPE_API_VERSION} SYSTEM PRIVATE ${WPEPlatform_SYSTEM_INCLUDE_DIRECTORIES})
+target_link_directories(WPEPlatform-${WPE_API_VERSION} PUBLIC ${WAYLAND_LIBRARY_DIRS} ${GLIB_LIBRARY_DIRS} ${GLIB_GIO_LIBRARY_DIRS})
 target_link_libraries(WPEPlatform-${WPE_API_VERSION} ${WPEPlatform_LIBRARIES})
 
 GI_INTROSPECT(WPEPlatform ${WPE_API_VERSION} wpe/wpe-platform.h
@@ -129,6 +131,7 @@ GI_INTROSPECT(WPEPlatform ${WPE_API_VERSION} wpe/wpe-platform.h
     OPTIONS
         -I${WEBKIT_DIR}/WPEPlatform
         -I${WPEPlatform_DERIVED_SOURCES_DIR}
+        -l${GLIB_LIBRARIES}
     SOURCES
         ${WPEPlatform_INSTALLED_HEADERS}
         ${WPEPlatform_SOURCES}
@@ -167,6 +170,7 @@ if (ENABLE_WPE_PLATFORM_HEADLESS)
         OPTIONS
             -I${WEBKIT_DIR}/WPEPlatform
             -I${WPEPlatform_DERIVED_SOURCES_DIR}
+            -l${GLIB_LIBRARIES}
         SOURCES
             ${WPEPlatformHeadless_SOURCES_FOR_INTROSPECTION}
         NO_IMPLICIT_SOURCES
@@ -186,6 +190,7 @@ if (ENABLE_WPE_PLATFORM_WAYLAND)
         OPTIONS
             -I${WEBKIT_DIR}/WPEPlatform
             -I${WPEPlatform_DERIVED_SOURCES_DIR}
+            -l${GLIB_LIBRARIES}
         SOURCES
             ${WPEPlatformWayland_SOURCES_FOR_INTROSPECTION}
         NO_IMPLICIT_SOURCES

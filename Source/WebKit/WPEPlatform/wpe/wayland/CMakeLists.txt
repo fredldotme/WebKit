@@ -33,8 +33,10 @@ set(WPEPlatformWayland_SYSTEM_INCLUDE_DIRECTORIES
 )
 
 set(WPEPlatformWayland_LIBRARIES
+    ${GLIB_GIO_LIBRARIES}
     ${WAYLAND_LIBRARIES}
     ${WPEPlatform_LIBRARIES}
+    -lrt
 )
 
 set(WPEPlatformWayland_SOURCES_FOR_INTROSPECTION
@@ -72,6 +74,7 @@ add_library(WPEPlatformWayland OBJECT ${WPEPlatformWayland_SOURCES})
 add_dependencies(WPEPlatformWayland WPEPlatformGeneratedEnumTypesHeader)
 target_include_directories(WPEPlatformWayland PRIVATE ${WPEPlatformWayland_PRIVATE_INCLUDE_DIRECTORIES})
 target_include_directories(WPEPlatformWayland SYSTEM PRIVATE ${WPEPlatformWayland_SYSTEM_INCLUDE_DIRECTORIES})
+target_link_directories(WPEPlatformWayland PUBLIC ${GLIB_GIO_LIBRARY_DIRS})
 target_link_libraries(WPEPlatformWayland ${WPEPlatformWayland_LIBRARIES})
 
 set_target_properties(WPEPlatformWayland PROPERTIES
