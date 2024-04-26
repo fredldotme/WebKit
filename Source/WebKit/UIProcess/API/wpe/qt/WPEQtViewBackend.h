@@ -86,6 +86,4 @@ private:
     uint32_t m_mouseModifiers { 0 };
     uint32_t m_keyboardModifiers { 0 };
     uint32_t m_mousePressedButton { 0 };
-
-    QElapsedTimer m_fpsTimer;
 };

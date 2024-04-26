@@ -217,8 +217,6 @@ GLuint WPEQtViewBackend::texture(QOpenGLContext* context)
 
 void WPEQtViewBackend::displayImage(struct wpe_fdo_egl_exported_image* image)
 {
-    qDebug() << m_fpsTimer.restart();
-
     Q_ASSUME(!m_lockedImage);
     m_lockedImage = image;
     if (m_view)
