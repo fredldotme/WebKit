@@ -44,6 +44,8 @@
 #include <wtf/glib/GUniquePtr.h>
 #include <wtf/unix/UnixFileDescriptor.h>
 
+#include <iostream>
+
 #if OS(UNIX)
 #include <sys/utsname.h>
 #endif
@@ -382,6 +384,7 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
 #else
     bool usingWPEPlatformAPI = false;
 #endif
+    bool usingHybris = !!getenv("HYBRIS_EGLPLATFORM");
 
     if (!usingWPEPlatformAPI) {
         addTableRow(versionObject, "WPE version"_s, makeString(WPE_MAJOR_VERSION, '.', WPE_MINOR_VERSION, '.', WPE_MICRO_VERSION, " (build) "_s, wpe_get_major_version(), '.', wpe_get_minor_version(), '.', wpe_get_micro_version(), " (runtime)"_s));
@@ -551,6 +554,26 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
     }
 #endif
 
+    if (usingHybris) {
+        PlatformDisplay& platformDisplay = PlatformDisplay::sharedDisplayForCompositing();
+
+        {
+            auto hardwareAccelerationObject = JSON::Object::create();
+            startTable("Hardware Acceleration Information (Render Process)"_s);
+
+            addTableRow(hardwareAccelerationObject, "Platform"_s, String::fromUTF8(platformDisplay.type() == PlatformDisplay::Type::Surfaceless ? "Surfaceless"_s : "Hybris"_s));
+
+            {
+                GLContext::ScopedGLContext glContext(GLContext::createOffscreen(platformDisplay));
+                addEGLInfo(hardwareAccelerationObject);
+            }
+
+            stopTable();
+            jsonObject->setObject("Hardware Acceleration Information (Render process)"_s, WTFMove(hardwareAccelerationObject));
+        }
+    }
+
+
 #if PLATFORM(WPE) && ENABLE(WPE_PLATFORM)
     if (usingWPEPlatformAPI) {
         std::unique_ptr<PlatformDisplay> platformDisplay;
@@ -566,6 +589,7 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
             }
         }
 #endif
+
         if (!platformDisplay)
             platformDisplay = PlatformDisplaySurfaceless::create();
 
