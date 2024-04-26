@@ -279,6 +279,8 @@ void ThreadedCompositor::renderLayerTree()
 
     if (m_scene->isActive())
         m_client.didRenderFrame();
+
+    frameComplete();
 }
 
 void ThreadedCompositor::sceneUpdateFinished()
