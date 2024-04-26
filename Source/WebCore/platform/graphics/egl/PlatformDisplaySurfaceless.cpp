@@ -48,22 +48,17 @@ PlatformDisplaySurfaceless::PlatformDisplaySurfaceless()
     PlatformDisplay::setSharedDisplayForCompositing(*this);
 #endif
 
-    auto platform = EGL_PLATFORM_SURFACELESS_MESA;
-
     const char* extensions = eglQueryString(nullptr, EGL_EXTENSIONS);
-    if (GLContext::isExtensionSupported(extensions, "EGL_EXT_platform_base"))
-        m_eglDisplay = eglGetPlatformDisplayEXT(platform, EGL_DEFAULT_DISPLAY, nullptr);
-    else if (GLContext::isExtensionSupported(extensions, "EGL_KHR_platform_base"))
-        m_eglDisplay = eglGetPlatformDisplay(platform, EGL_DEFAULT_DISPLAY, nullptr);
-    else if (GLContext::isExtensionSupported(extensions, "EGL_HYBRIS_native_buffer2")) {
-        platform = EGL_PLATFORM_ANDROID_KHR;
-        m_eglDisplay = eglGetPlatformDisplay(platform, EGL_DEFAULT_DISPLAY, nullptr);
+    if (GLContext::isExtensionSupported(extensions, "EGL_EXT_platform_base")) {
+        m_eglDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr);
+    } else if (GLContext::isExtensionSupported(extensions, "EGL_KHR_platform_base")) {
+        m_eglDisplay = eglGetPlatformDisplay(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr);
     }
 
     PlatformDisplay::initializeEGLDisplay();
 
 #if ENABLE(WEBGL)
-    m_anglePlatform = platform;
+    m_anglePlatform = EGL_PLATFORM_SURFACELESS_MESA;
     m_angleNativeDisplay = EGL_DEFAULT_DISPLAY;
 #endif
 }
