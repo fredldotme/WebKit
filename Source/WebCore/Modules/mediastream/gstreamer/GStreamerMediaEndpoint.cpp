@@ -466,10 +466,12 @@ void GStreamerMediaEndpoint::doSetLocalDescription(const RTCSessionDescription* 
         if (protectedThis->isStopped())
             return;
         if (error) {
+#if GST_CHECK_VERSION(1, 18, 0)
             if (error->code == GST_WEBRTC_ERROR_INVALID_STATE) {
                 m_peerConnectionBackend.setLocalDescriptionFailed(Exception { ExceptionCode::InvalidStateError, "Failed to set local answer sdp: no pending remote description."_s });
                 return;
             }
+#endif
             m_peerConnectionBackend.setLocalDescriptionFailed(Exception { ExceptionCode::OperationError, String::fromUTF8(error->message) });
         } else
             m_peerConnectionBackend.setLocalDescriptionFailed(Exception { ExceptionCode::OperationError, "Unable to apply session local description"_s });
@@ -539,9 +541,11 @@ void GStreamerMediaEndpoint::doSetRemoteDescription(const RTCSessionDescription&
     }, [protectedThis = Ref(*this), this](const GError* error) {
         if (protectedThis->isStopped())
             return;
+#if GST_CHECK_VERSION(1, 18, 0)
         if (error && error->code == GST_WEBRTC_ERROR_INVALID_STATE)
             m_peerConnectionBackend.setRemoteDescriptionFailed(Exception { ExceptionCode::InvalidStateError, "Failed to set remote answer sdp"_s });
         else
+#endif
             m_peerConnectionBackend.setRemoteDescriptionFailed(Exception { ExceptionCode::OperationError, "Unable to apply session remote description"_s });
     });
 #if !RELEASE_LOG_DISABLED

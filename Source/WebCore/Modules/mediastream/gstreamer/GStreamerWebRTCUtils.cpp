@@ -84,10 +84,14 @@ static inline std::optional<RTCIceCandidateType> toRTCIceCandidateType(const Str
 
 RefPtr<RTCError> toRTCError(GError* rtcError)
 {
+#if GST_CHECK_VERSION(1, 18, 0)
     auto detail = toRTCErrorDetailType(static_cast<GstWebRTCError>(rtcError->code));
     if (!detail)
         return nullptr;
     return RTCError::create(*detail, String::fromUTF8(rtcError->message));
+#else
+    return RTCError::create(RTCErrorDetailType::DataChannelFailure, String::fromUTF8(rtcError->message));
+#endif
 }
 
 static inline double toWebRTCBitRatePriority(RTCPriorityType priority)

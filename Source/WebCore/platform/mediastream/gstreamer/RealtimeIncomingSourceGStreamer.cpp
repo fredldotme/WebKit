@@ -132,6 +132,7 @@ std::optional<int> RealtimeIncomingSourceGStreamer::registerClient(GRefPtr<GstEl
             });
             return GST_FLOW_OK;
         },
+#if GST_CHECK_VERSION(1, 20, 0)
         [](GstAppSink* sink, gpointer userData) -> gboolean {
             auto source = reinterpret_cast<ThreadSafeWeakPtr<RealtimeIncomingSourceGStreamer>*>(userData);
             auto strongSource = source->get();
@@ -169,6 +170,7 @@ std::optional<int> RealtimeIncomingSourceGStreamer::registerClient(GRefPtr<GstEl
 
             return false;
         },
+#endif
 #if GST_CHECK_VERSION(1, 24, 0)
         // propose_allocation
         nullptr,
