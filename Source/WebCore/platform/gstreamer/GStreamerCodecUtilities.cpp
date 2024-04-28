@@ -345,9 +345,11 @@ static std::pair<GRefPtr<GstCaps>, GRefPtr<GstCaps>> av1CapsFromCodecString(cons
     case AV1ConfigurationTransferCharacteristics::BT_470_7_BG:
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_GAMMA28;
         break;
+#if GST_CHECK_VERSION(1, 18, 0)
     case AV1ConfigurationTransferCharacteristics::BT_601_7:
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_BT601;
         break;
+#endif
     case AV1ConfigurationTransferCharacteristics::SMPTE_ST_240:
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_SMPTE240M;
         break;
@@ -369,6 +371,7 @@ static std::pair<GRefPtr<GstCaps>, GRefPtr<GstCaps>> av1CapsFromCodecString(cons
         GST_WARNING("AV1ConfigurationTransferCharacteristics::IEC_61966_2_1 not supported");
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_UNKNOWN;
         break;
+#if GST_CHECK_VERSION(1, 18, 0)
     case AV1ConfigurationTransferCharacteristics::BT_2020_10bit:
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_BT2020_10;
         break;
@@ -385,6 +388,7 @@ static std::pair<GRefPtr<GstCaps>, GRefPtr<GstCaps>> av1CapsFromCodecString(cons
     case AV1ConfigurationTransferCharacteristics::BT_2100_HLG:
         GST_VIDEO_INFO_COLORIMETRY(&info).transfer = GST_VIDEO_TRANSFER_ARIB_STD_B67;
         break;
+#endif
     };
 
     switch (static_cast<AV1ConfigurationMatrixCoefficients>(configurationRecord->matrixCoefficients)) {
