@@ -182,6 +182,10 @@ enum {
 
     QUERY_PERMISSION_STATE,
 
+#if PLATFORM(WPE)
+    THEME_COLOR_CHANGED,
+#endif
+
     LAST_SIGNAL
 };
 
@@ -403,6 +407,13 @@ void webkitWebViewMediaCaptureStateDidChange(WebKitWebView* webView, WebCore::Me
         g_object_notify_by_pspec(G_OBJECT(webView), sObjProperties[PROP_DISPLAY_CAPTURE_STATE]);
 }
 
+static void webkitWebViewThemeColorChanged(WebKitWebView* webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    g_signal_emit(webView, signals[THEME_COLOR_CHANGED], 0);
+}
+
 class PageLoadStateObserver final : public PageLoadState::Observer {
     WTF_MAKE_FAST_ALLOCATED;
 public:
@@ -525,6 +536,11 @@ void WebKitWebViewClient::didReceiveUserMessage(WKWPE::View&, UserMessage&& mess
 WebKitWebResourceLoadManager* WebKitWebViewClient::webResourceLoadManager()
 {
     return webkitWebViewGetWebResourceLoadManager(m_webView);
+}
+
+void WebKitWebViewClient::themeColorDidChange()
+{
+    webkitWebViewThemeColorChanged(m_webView);
 }
 
 #if ENABLE(FULLSCREEN_API)
@@ -2421,6 +2437,20 @@ static void webkit_web_view_class_init(WebKitWebViewClass* webViewClass)
         g_cclosure_marshal_generic,
         G_TYPE_BOOLEAN, 1, /* number of parameters */
         WEBKIT_TYPE_PERMISSION_STATE_QUERY);
+
+    /**
+     * WebKitWebView::theme-color-changed:
+     * @view: a #WebKitWebView
+     *
+     * Emitted when the content of the @view changes its theme color.
+     */
+    signals[THEME_COLOR_CHANGED] = g_signal_new(
+        "theme-color-changed",
+        G_TYPE_FROM_CLASS(webViewClass),
+        G_SIGNAL_RUN_LAST,
+        0, nullptr, nullptr,
+        g_cclosure_marshal_generic,
+        G_TYPE_NONE, 0);
 }
 
 static void webkitWebViewCompleteAuthenticationRequest(WebKitWebView* webView)

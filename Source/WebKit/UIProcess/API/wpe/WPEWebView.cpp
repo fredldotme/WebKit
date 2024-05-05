@@ -988,6 +988,11 @@ void View::setCursor(const WebCore::Cursor& cursor)
 #endif
 }
 
+void View::themeColorDidChange()
+{
+    m_client->themeColorDidChange();
+}
+
 void View::callAfterNextPresentationUpdate(CompletionHandler<void()>&& callback)
 {
 #if ENABLE(WPE_PLATFORM)

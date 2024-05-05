@@ -815,6 +815,10 @@ webkit_web_view_set_background_color                 (WebKitWebView             
 WEBKIT_API void
 webkit_web_view_get_background_color                 (WebKitWebView               *web_view,
                                                       WebKitColor                 *color);
+
+WEBKIT_API void
+webkit_web_view_get_theme_color                      (WebKitWebView               *web_view,
+                                                      WebKitColor                 *color);
 #endif
 
 WEBKIT_API gboolean

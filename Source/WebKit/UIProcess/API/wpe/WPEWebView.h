@@ -147,6 +147,7 @@ public:
 #endif
 
     void setCursor(const WebCore::Cursor&);
+    void themeColorDidChange();
 
     void callAfterNextPresentationUpdate(CompletionHandler<void()>&&);
 

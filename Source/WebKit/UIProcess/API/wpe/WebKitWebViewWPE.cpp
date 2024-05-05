@@ -262,6 +262,26 @@ void webkit_web_view_get_background_color(WebKitWebView* webView, WebKitColor* c
     webkitColorFillFromWebCoreColor(webCoreColor.value_or(WebCore::Color::white), color);
 }
 
+/**
+ * webkit_web_view_get_theme_color:
+ * @web_view: a #WebKitWebView
+ * @color: (out): a #WebKitColor to fill in with the theme color
+ *
+ * Gets the theme color that is specified by the content it the @web_view.
+ *
+ * Since: tbd
+ */
+void webkit_web_view_get_theme_color(WebKitWebView* webView, WebKitColor* color)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+    auto& page = webkitWebViewGetPage(webView);
+
+    if (!page.themeColor().isValid())
+        return;
+
+    webkitColorFillFromWebCoreColor(page.themeColor(), color);
+}
+
 guint createShowOptionMenuSignal(WebKitWebViewClass* webViewClass)
 {
     /**

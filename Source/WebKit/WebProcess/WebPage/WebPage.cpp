@@ -4976,6 +4976,10 @@ void WebPage::updateRendering()
 {
     m_page->updateRendering();
 
+#if PLATFORM(WPE)
+    flushPendingThemeColorChange();
+#endif
+
 #if PLATFORM(IOS_FAMILY)
     findController().redraw();
     foundTextRangeController().redraw();
