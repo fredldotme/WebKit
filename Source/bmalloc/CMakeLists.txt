@@ -676,6 +676,7 @@ endif ()
 
 set(bmalloc_LIBRARIES
     ${CMAKE_DL_LIBS}
+    -lpthread
 )
 
 if (ATOMICS_REQUIRE_LIBATOMIC)
