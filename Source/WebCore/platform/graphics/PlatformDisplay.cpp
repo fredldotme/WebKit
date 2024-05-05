@@ -336,6 +336,8 @@ void PlatformDisplay::initializeEGLDisplay()
     if (!m_eglDisplayOwned)
         return;
 
+
+    eglSwapInterval(m_eglDisplay, 0);
     eglDisplays().add(this);
 
 #if !PLATFORM(WIN)
