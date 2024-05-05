@@ -1573,7 +1573,7 @@ public:
 #endif
 
     void themeColorChanged() { m_pendingThemeColorChange = true; }
-#if PLATFORM(MAC)
+#if PLATFORM(MAC) || PLATFORM(WPE)
     void flushPendingThemeColorChange();
 #endif
 

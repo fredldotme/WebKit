@@ -5030,6 +5030,10 @@ void WebPage::updateRendering()
 {
     protectedCorePage()->updateRendering();
 
+#if PLATFORM(WPE)
+    flushPendingThemeColorChange();
+#endif
+
 #if PLATFORM(IOS_FAMILY)
     findController().redraw();
     foundTextRangeController().redraw();
@@ -8084,7 +8088,7 @@ void WebPage::getInformationFromImageData(const Vector<uint8_t>& data, Completio
 }
 #endif
 
-#if PLATFORM(MAC)
+#if PLATFORM(MAC) || PLATFORM(WPE)
 void WebPage::flushPendingThemeColorChange()
 {
     if (!m_pendingThemeColorChange)

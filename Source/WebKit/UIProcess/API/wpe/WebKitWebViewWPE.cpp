@@ -326,3 +326,30 @@ void webkit_web_view_toggle_inspector(WebKitWebView* webView)
         inspector->show();
 }
 #endif
+
+/**
+ * webkit_web_view_get_theme_color:
+ * @web_view: a #WebKitWebView
+ * @color: (out): a #WebKitColor to fill in with the theme color
+ *
+ * Gets the theme color that is specified by the content in the @web_view.
+ *
+ * Returns: Whether the currently loaded page defines a theme color.
+ *
+ * Since: 2.50
+ */
+gboolean
+webkit_web_view_get_theme_color(WebKitWebView* webView, WebKitColor* color)
+{
+    g_return_val_if_fail(WEBKIT_IS_WEB_VIEW(webView), false);
+    auto& page = webkitWebViewGetPage(webView);
+
+    if (!page.themeColor().isValid()) {
+        WebCore::Color tmpColor(WebCore::Color::transparentBlack);
+        webkitColorFillFromWebCoreColor(tmpColor, color);
+        return false;
+    }
+
+    webkitColorFillFromWebCoreColor(page.themeColor(), color);
+    return true;
+}
