@@ -416,6 +416,9 @@ webgl/webgl-worker.html [ Skip ]
 # Accelerated canvas isn't supported yet
 fast/canvas/canvas-will-read-frequently.html [ Skip ]
 
+# Limiting accelerated canvases not implemented for WK1
+fast/canvas/image-buffer-backend-count-limit.html [ Skip ]
+
 #//////////////////////////////////////////////////////////////////////////////////////////
 # These areas are not implemented well on WinCairo
 #//////////////////////////////////////////////////////////////////////////////////////////
@@ -3327,3 +3330,5 @@ imported/w3c/web-platform-tests/css/selectors/focus-within-013.html [ ImageOnlyF
 [ Release ] imported/w3c/web-platform-tests/scroll-animations/css/animation-inactive-outside-range-test.html [ Timeout Pass ]
 
 resize-observer/contain-instrinsic-size-should-not-leak-nodes.html [ Failure Pass ]
+
+fast/css/view-transitions-nested-transparency-layers.html [ ImageOnlyFailure Pass ]

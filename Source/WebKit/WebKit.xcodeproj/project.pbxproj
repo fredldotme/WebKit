@@ -1953,7 +1953,6 @@
 		A1B4DCE125A7923C007D178C /* MediaSampleByteRange.h in Headers */ = {isa = PBXBuildFile; fileRef = A1B4DCDF25A79211007D178C /* MediaSampleByteRange.h */; };
 		A1C512C9190656E500448914 /* WebPreviewLoaderClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A1C512C7190656E500448914 /* WebPreviewLoaderClient.h */; };
 		A1C9FBFF2BB78C4A00CC6B40 /* LinearMediaKitSPI.h in Headers */ = {isa = PBXBuildFile; fileRef = A1C9FBFE2BB78C4A00CC6B40 /* LinearMediaKitSPI.h */; };
-		A1C9FC002BB78C4A00CC6B40 /* LinearMediaKitSPI.h in Headers */ = {isa = PBXBuildFile; fileRef = A1C9FBFE2BB78C4A00CC6B40 /* LinearMediaKitSPI.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A1D4D2092B7DE6D00008C40E /* PlaybackSessionInterfaceLMK.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F6B9EFA2B7AA21B0051676F /* PlaybackSessionInterfaceLMK.mm */; };
 		A1D4D2372B7E7FAD0008C40E /* VideoReceiverEndpointMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = A1D4D2352B7E7FAC0008C40E /* VideoReceiverEndpointMessage.h */; };
 		A1D4D23A2B7E82D90008C40E /* XPCEndpointMessages.h in Headers */ = {isa = PBXBuildFile; fileRef = A1D4D2382B7E82D90008C40E /* XPCEndpointMessages.h */; };
@@ -7919,6 +7918,7 @@
 		D952EC7D289C9A4C006C240A /* WebPermissionControllerProxyMessageReceiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebPermissionControllerProxyMessageReceiver.cpp; sourceTree = "<group>"; };
 		DA97E4AC2B6BCCF20009E90B /* WebExtension.serialization.in */ = {isa = PBXFileReference; lastKnownFileType = text; name = WebExtension.serialization.in; path = UIProcess/Extensions/WebExtension.serialization.in; sourceTree = "<group>"; };
 		DD284681291F7CEF0009A61D /* APIFeatureStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIFeatureStatus.h; sourceTree = "<group>"; };
+		DD6E58C42BE004DE0000C264 /* RealitySystemSupportSPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RealitySystemSupportSPI.h; sourceTree = "<group>"; };
 		DD8CD35F296D03A300C04CA1 /* _WKFeature.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = _WKFeature.mm; sourceTree = "<group>"; };
 		DD8CD360296D03A300C04CA1 /* _WKFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WKFeature.h; sourceTree = "<group>"; };
 		DD8CD361296D03A400C04CA1 /* _WKFeatureInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WKFeatureInternal.h; sourceTree = "<group>"; };
@@ -15722,6 +15722,7 @@
 			children = (
 				E539DFEA2A44A69100769F09 /* MRUIKitSPI.h */,
 				E539DFEC2A44A78600769F09 /* RealitySimulationServicesSPI.h */,
+				DD6E58C42BE004DE0000C264 /* RealitySystemSupportSPI.h */,
 			);
 			path = visionos;
 			sourceTree = "<group>";
@@ -17565,7 +17566,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1098E682BB6410800449EE0 /* LinearMediaKitExtras.h in Headers */,
-				A1C9FC002BB78C4A00CC6B40 /* LinearMediaKitSPI.h in Headers */,
 				A14F9B672B686E0200AD9C56 /* WebKitSwift.h in Headers */,
 				A14F9B762B68CA6C00AD9C56 /* WKSLinearMediaPlayer.h in Headers */,
 				A14F9B632B686DD300AD9C56 /* WKSLinearMediaTypes.h in Headers */,

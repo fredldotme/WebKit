@@ -2460,7 +2460,7 @@ void WebPage::setPageZoomFactor(double zoomFactor)
 static void dumpHistoryItem(HistoryItem& item, size_t indent, bool isCurrentItem, StringBuilder& stringBuilder, const String& directoryName)
 {
     if (isCurrentItem)
-        stringBuilder.append("curr->  ");
+        stringBuilder.append("curr->  "_s);
     else {
         for (size_t i = 0; i < indent; ++i)
             stringBuilder.append(' ');
@@ -2473,16 +2473,16 @@ static void dumpHistoryItem(HistoryItem& item, size_t indent, bool isCurrentItem
             start = 0;
         else
             start += directoryName.length();
-        stringBuilder.append("(file test):", StringView { url.string() }.substring(start));
+        stringBuilder.append("(file test):"_s, StringView { url.string() }.substring(start));
     } else
         stringBuilder.append(url.string());
 
     auto& target = item.target();
     if (target.length())
-        stringBuilder.append(" (in frame \"", target, "\")");
+        stringBuilder.append(" (in frame \""_s, target, "\")"_s);
 
     if (item.isTargetItem())
-        stringBuilder.append("  **nav target**");
+        stringBuilder.append("  **nav target**"_s);
 
     stringBuilder.append('\n');
 
@@ -3555,6 +3555,15 @@ void WebPage::mouseEvent(FrameIdentifier frameID, const WebMouseEvent& mouseEven
     completionHandler(mouseEvent.type(), handled, std::nullopt);
 }
 
+void WebPage::setLastKnownMousePosition(WebCore::FrameIdentifier frameID, IntPoint eventPoint, IntPoint globalPoint)
+{
+    auto* frame = WebProcess::singleton().webFrame(frameID);
+    if (!frame || !frame->coreLocalFrame() || !frame->coreLocalFrame()->view())
+        return;
+
+    frame->coreLocalFrame()->eventHandler().setLastKnownMousePosition(eventPoint, globalPoint);
+}
+
 void WebPage::flushDeferredDidReceiveMouseEvent()
 {
     if (auto info = std::exchange(m_deferredMouseEventCompletionHandler, std::nullopt))
@@ -4557,14 +4566,14 @@ void WebPage::getAccessibilityTreeData(CompletionHandler<void(const std::optiona
     callback(dataBuffer);
 }
 
-void WebPage::forceRepaintWithoutCallback()
+void WebPage::updateRenderingWithForcedRepaintWithoutCallback()
 {
-    m_drawingArea->forceRepaint();
+    m_drawingArea->updateRenderingWithForcedRepaint();
 }
 
-void WebPage::forceRepaint(CompletionHandler<void()>&& completionHandler)
+void WebPage::updateRenderingWithForcedRepaint(CompletionHandler<void()>&& completionHandler)
 {
-    m_drawingArea->forceRepaintAsync(*this, WTFMove(completionHandler));
+    m_drawingArea->updateRenderingWithForcedRepaintAsync(*this, WTFMove(completionHandler));
 }
 
 void WebPage::preferencesDidChange(const WebPreferencesStore& store)
@@ -7528,6 +7537,9 @@ void WebPage::didCommitLoad(WebFrame* frame)
             scalePage(1, IntPoint());
     }
 
+    // This timer can race with loading and clobber the scroll position saved on the current history item.
+    m_pageScrolledHysteresis.cancel();
+
     m_didUpdateRenderingAfterCommittingLoad = false;
 
 #if PLATFORM(IOS_FAMILY)
@@ -7590,6 +7602,8 @@ void WebPage::didCommitLoad(WebFrame* frame)
 #endif
 
     themeColorChanged();
+
+    m_lastNodeBeforeWritingSuggestions = { };
 
     WebProcess::singleton().updateActivePages(m_processDisplayName);
 
@@ -9599,6 +9613,15 @@ void WebPage::frameNameWasChangedInAnotherProcess(FrameIdentifier frameID, const
         return;
     if (RefPtr coreFrame = webFrame->coreFrame())
         coreFrame->tree().setSpecifiedName(AtomString(frameName));
+}
+
+void WebPage::updateLastNodeBeforeWritingSuggestions(const KeyboardEvent& event)
+{
+    if (event.type() != eventNames().keydownEvent)
+        return;
+
+    if (RefPtr frame = m_page->checkedFocusController()->focusedOrMainFrame())
+        m_lastNodeBeforeWritingSuggestions = frame->editor().nodeBeforeWritingSuggestions();
 }
 
 } // namespace WebKit

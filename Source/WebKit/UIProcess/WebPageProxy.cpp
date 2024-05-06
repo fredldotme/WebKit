@@ -3627,6 +3627,11 @@ void WebPageProxy::continueWheelEventHandling(const WebWheelEvent& wheelEvent, c
     LOG_WITH_STREAM(WheelEvents, stream << "WebPageProxy::continueWheelEventHandling - " << result);
 
     if (!result.needsMainThreadProcessing()) {
+        if (wheelEvent.phase() == WebWheelEvent::Phase::PhaseBegan) {
+            // When wheel events are handled entirely in the UI process, we still need to tell the web process where the mouse is for cursor updates.
+            sendToProcessContainingFrame(m_mainFrame->frameID(), Messages::WebPage::SetLastKnownMousePosition(m_mainFrame->frameID(), wheelEvent.position(), wheelEvent.globalPosition()));
+        }
+
         wheelEventHandlingCompleted(result.wasHandled);
         return;
     }
@@ -4626,6 +4631,7 @@ void WebPageProxy::continueNavigationInNewProcess(API::Navigation& navigation, W
         loadParameters.shouldTreatAsContinuingLoad = navigation.currentRequestIsRedirect() ? WebCore::ShouldTreatAsContinuingLoad::YesAfterProvisionalLoadStarted : WebCore::ShouldTreatAsContinuingLoad::YesAfterNavigationPolicyDecision;
         loadParameters.frameIdentifier = frame.frameID();
         loadParameters.isRequestFromClientOrUserInput = navigation.isRequestFromClientOrUserInput();
+        loadParameters.lockBackForwardList = LockBackForwardList::Yes;
 
         auto webPageID = webPageIDInProcessForDomain(RegistrableDomain(navigation.currentRequest().url()));
         frame.prepareForProvisionalNavigationInProcess(newProcess, navigation, m_browsingContextGroup, [loadParameters = WTFMove(loadParameters), newProcess = newProcess.copyRef(), webPageID, preventProcessShutdownScope = newProcess->shutdownPreventingScope()] () mutable {
@@ -5766,7 +5772,7 @@ void WebPageProxy::getAccessibilityTreeData(CompletionHandler<void(API::Data*)>&
     sendWithAsyncReply(Messages::WebPage::GetAccessibilityTreeData(), toAPIDataCallback(WTFMove(callback)));
 }
 
-void WebPageProxy::forceRepaint(CompletionHandler<void()>&& callback)
+void WebPageProxy::updateRenderingWithForcedRepaint(CompletionHandler<void()>&& callback)
 {
     if (!hasRunningProcess())
         return callback();
@@ -5778,7 +5784,7 @@ void WebPageProxy::forceRepaint(CompletionHandler<void()>&& callback)
         protectedThis->callAfterNextPresentationUpdate(WTFMove(callback));
     });
     forEachWebContentProcess([&](auto& webProcess, auto pageID) {
-        webProcess.sendWithAsyncReply(Messages::WebPage::ForceRepaint(), [aggregator] { }, pageID);
+        webProcess.sendWithAsyncReply(Messages::WebPage::UpdateRenderingWithForcedRepaint(), [aggregator] { }, pageID);
     });
 }
 

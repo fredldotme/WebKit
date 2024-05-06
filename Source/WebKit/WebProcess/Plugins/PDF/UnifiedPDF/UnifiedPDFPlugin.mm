@@ -182,8 +182,11 @@ void UnifiedPDFPlugin::teardown()
 
     PDFPluginBase::teardown();
 
-    if (m_rootLayer)
-        m_rootLayer->removeFromParent();
+    GraphicsLayer::unparentAndClear(m_rootLayer);
+    GraphicsLayer::unparentAndClear(m_contentsLayer);
+#if ENABLE(UNIFIED_PDF_SELECTION_LAYER)
+    GraphicsLayer::unparentAndClear(m_selectionLayer);
+#endif
 
     RefPtr page = this->page();
     if (m_scrollingNodeID && page) {
@@ -466,7 +469,8 @@ void UnifiedPDFPlugin::ensureLayers()
         m_selectionLayer = createGraphicsLayer("PDF selections"_s, GraphicsLayer::Type::TiledBacking);
         m_selectionLayer->setAnchorPoint({ });
         m_selectionLayer->setDrawsContent(true);
-        m_selectionLayer->setAcceleratesDrawing(true);
+        if (canPaintSelectionIntoOwnedLayer())
+            m_selectionLayer->setAcceleratesDrawing(true);
         m_selectionLayer->setBlendMode(BlendMode::Multiply);
         m_scrolledContentsLayer->addChild(*m_selectionLayer);
     }
@@ -4071,8 +4075,12 @@ void UnifiedPDFPlugin::setPDFDisplayModeForTesting(const String& mode)
 
 void UnifiedPDFPlugin::setDisplayModeAndUpdateLayout(PDFDocumentLayout::DisplayMode mode)
 {
+    auto shouldAdjustPageScale = m_shouldUpdateAutoSizeScale == ShouldUpdateAutoSizeScale::Yes ? AdjustScaleAfterLayout::No : AdjustScaleAfterLayout::Yes;
     m_documentLayout.setDisplayMode(mode);
-    updateLayout(AdjustScaleAfterLayout::Yes);
+    {
+        SetForScope scope(m_shouldUpdateAutoSizeScale, ShouldUpdateAutoSizeScale::Yes);
+        updateLayout(shouldAdjustPageScale);
+    }
     resnapAfterLayout();
 }
 

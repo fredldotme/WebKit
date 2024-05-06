@@ -1219,7 +1219,7 @@ public:
     void setDeviceScaleFactor(float);
     float deviceScaleFactor() const;
 
-    void forceRepaintWithoutCallback();
+    void updateRenderingWithForcedRepaintWithoutCallback();
 
     void unmarkAllMisspellings();
     void unmarkAllBadGrammar();
@@ -1896,6 +1896,8 @@ private:
     void mouseEvent(WebCore::FrameIdentifier, const WebMouseEvent&, std::optional<Vector<SandboxExtension::Handle>>&& sandboxExtensions, CompletionHandler<void(std::optional<WebEventType>, bool, std::optional<WebCore::RemoteUserInputEventData>)>&&);
     void keyEvent(WebCore::FrameIdentifier, const WebKeyboardEvent&, CompletionHandler<void(std::optional<WebEventType>, bool)>&&);
 
+    void setLastKnownMousePosition(WebCore::FrameIdentifier, WebCore::IntPoint eventPoint, WebCore::IntPoint globalPoint);
+
 #if ENABLE(IOS_TOUCH_EVENTS)
     void touchEventSync(const WebTouchEvent&, CompletionHandler<void(bool)>&&);
     void resetPotentialTapSecurityOrigin();
@@ -1961,7 +1963,7 @@ private:
     void runJavaScript(WebFrame*, WebCore::RunJavaScriptParameters&&, ContentWorldIdentifier, CompletionHandler<void(std::span<const uint8_t>, const std::optional<WebCore::ExceptionDetails>&)>&&);
     void runJavaScriptInFrameInScriptWorld(WebCore::RunJavaScriptParameters&&, std::optional<WebCore::FrameIdentifier>, const std::pair<ContentWorldIdentifier, String>& worldData, CompletionHandler<void(std::span<const uint8_t>, const std::optional<WebCore::ExceptionDetails>&)>&&);
     void getAccessibilityTreeData(CompletionHandler<void(const std::optional<IPC::SharedBufferReference>&)>&&);
-    void forceRepaint(CompletionHandler<void()>&&);
+    void updateRenderingWithForcedRepaint(CompletionHandler<void()>&&);
     void takeSnapshot(WebCore::IntRect snapshotRect, WebCore::IntSize bitmapSize, uint32_t options, CompletionHandler<void(std::optional<WebCore::ShareableBitmap::Handle>&&)>&&);
 
     void preferencesDidChange(const WebPreferencesStore&);
@@ -2020,6 +2022,8 @@ private:
     void unapplyEditCommand(WebUndoStepID commandID);
     void reapplyEditCommand(WebUndoStepID commandID);
     void didRemoveEditCommand(WebUndoStepID commandID);
+
+    void updateLastNodeBeforeWritingSuggestions(const WebCore::KeyboardEvent&);
 
     void findString(const String&, OptionSet<FindOptions>, uint32_t maxMatchCount, CompletionHandler<void(std::optional<WebCore::FrameIdentifier>, Vector<WebCore::IntRect>&&, uint32_t, int32_t, bool)>&&);
 #if ENABLE(IMAGE_ANALYSIS)
@@ -2243,6 +2247,8 @@ private:
     void textReplacementSessionDidReceiveTextWithReplacementRange(const WTF::UUID&, const WebCore::AttributedString&, const WebCore::CharacterRange&, const WebKit::WebUnifiedTextReplacementContextData&);
 
     void textReplacementSessionDidReceiveEditAction(const WTF::UUID&, WebKit::WebTextReplacementDataEditAction);
+
+    std::optional<WebCore::SimpleRange> getRangeforUUID(const WTF::UUID&);
 
     void getTextIndicatorForID(const WTF::UUID&, CompletionHandler<void(std::optional<WebCore::TextIndicatorData>&&)>&&);
 
@@ -2741,6 +2747,8 @@ private:
 #if HAVE(APP_ACCENT_COLORS)
     bool m_appUsesCustomAccentColor { false };
 #endif
+
+    WeakPtr<WebCore::Node, WebCore::WeakPtrImplWithEventTargetData> m_lastNodeBeforeWritingSuggestions;
 
     bool m_textManipulationIncludesSubframes { false };
     std::optional<Vector<WebCore::TextManipulationController::ExclusionRule>> m_textManipulationExclusionRules;

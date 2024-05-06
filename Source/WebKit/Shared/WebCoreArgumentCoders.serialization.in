@@ -906,6 +906,7 @@ header: <WebCore/ElementTargetingTypes.h>
     bool isNearbyTarget
     bool isPseudoElement
     bool isInShadowTree
+    bool hasAudibleMedia
 };
 
 header: <WebCore/RenderStyleConstants.h>
@@ -2464,15 +2465,6 @@ enum class WebCore::PixelFormat : uint8_t {
     BGRA8,
     RGB10,
     RGB10A8,
-};
-
-enum class WebCore::PixelFormatValidated : uint8_t {
-    BGRX8,
-    BGRA8,
-#if HAVE(IOSURFACE_RGB10)
-    RGB10,
-    RGB10A8,
-#endif
 };
 
 [AdditionalEncoder=StreamConnectionEncoder] struct WebCore::PixelBufferFormat {
@@ -4564,7 +4556,7 @@ header: <WebCore/ImageBuffer.h>
     WebCore::FloatSize logicalSize;
     float resolutionScale;
     WebCore::DestinationColorSpace colorSpace
-    WebCore::PixelFormatValidated pixelFormatValidated;
+    WebCore::PixelFormat pixelFormat;
     WebCore::RenderingPurpose purpose;
 };
 
