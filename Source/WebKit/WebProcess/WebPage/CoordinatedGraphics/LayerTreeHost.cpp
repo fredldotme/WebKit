@@ -426,7 +426,9 @@ void LayerTreeHost::didRenderFrame(uint32_t compositionResponseID)
 #if HAVE(DISPLAY_LINK)
 void LayerTreeHost::didRenderFrameTimerFired()
 {
+#if 0
     if (!m_isWaitingForRenderer || (m_isWaitingForRenderer && m_compositionRequestID == m_compositionResponseID))
+#endif
         renderNextFrame(false);
 }
 #endif
