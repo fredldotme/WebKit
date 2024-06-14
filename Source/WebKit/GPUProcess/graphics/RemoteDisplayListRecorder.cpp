@@ -382,6 +382,11 @@ void RemoteDisplayListRecorder::beginTransparencyLayer(float opacity)
     handleItem(DisplayList::BeginTransparencyLayer(opacity));
 }
 
+void RemoteDisplayListRecorder::beginTransparencyLayerWithCompositeMode(CompositeMode compositeMode)
+{
+    handleItem(DisplayList::BeginTransparencyLayerWithCompositeMode(compositeMode));
+}
+
 void RemoteDisplayListRecorder::endTransparencyLayer()
 {
     handleItem(DisplayList::EndTransparencyLayer());
