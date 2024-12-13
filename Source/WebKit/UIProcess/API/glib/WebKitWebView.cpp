@@ -2448,7 +2448,8 @@ static void webkit_web_view_class_init(WebKitWebViewClass* webViewClass)
         "theme-color-changed",
         G_TYPE_FROM_CLASS(webViewClass),
         G_SIGNAL_RUN_LAST,
-        0, nullptr, nullptr,
+        G_STRUCT_OFFSET(WebKitWebViewClass, change_theme_color),
+        nullptr, nullptr,
         g_cclosure_marshal_generic,
         G_TYPE_NONE, 0);
 }
