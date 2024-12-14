@@ -145,8 +145,6 @@ void WebProcess::platformInitializeWebProcess(WebProcessCreationParameters& para
 #if PLATFORM(WPE)
     m_dmaBufRendererBufferMode = parameters.dmaBufRendererBufferMode;
 
-    std::cout << "INIT: " << (!parameters.isServiceWorkerProcess && m_dmaBufRendererBufferMode.isEmpty()) << std::endl;
-
     if (!parameters.isServiceWorkerProcess && m_dmaBufRendererBufferMode.isEmpty()) {
         auto& implementationLibraryName = parameters.implementationLibraryName;
         if (getenv("WEBKIT_WPE_BACKEND"))

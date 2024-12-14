@@ -161,4 +161,3 @@ void PlatformDisplay::invalidateSkiaGLContexts()
 
 } // namespace WebCore
 
-#endif // USE(SKIA)
