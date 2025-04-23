@@ -529,12 +529,12 @@ void WebKitProtocolHandler::handleGPU(WebKitURISchemeRequest* request)
 
     if (policy != "never"_s) {
         addTableRow(jsonObject, "API"_s, String::fromUTF8(openGLAPI()));
-#if PLATFORM(GTK)
+#if PLATFORM(GTK) && USE(LIBDRM)
         if (usingDMABufRenderer) {
             addTableRow(hardwareAccelerationObject, "Renderer"_s, dmabufRendererWithSupportedBuffers());
             addTableRow(hardwareAccelerationObject, "Buffer format"_s, renderBufferFormat(request));
         }
-#elif PLATFORM(WPE) && ENABLE(WPE_PLATFORM)
+#elif PLATFORM(WPE) && ENABLE(WPE_PLATFORM) && USE(LIBDRM)
         if (usingWPEPlatformAPI) {
             addTableRow(hardwareAccelerationObject, "Renderer"_s, dmabufRendererWithSupportedBuffers());
             addTableRow(hardwareAccelerationObject, "Buffer format"_s, renderBufferFormat(request));
