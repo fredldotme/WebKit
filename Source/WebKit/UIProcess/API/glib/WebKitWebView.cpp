@@ -5796,7 +5796,9 @@ webkit_web_view_get_theme_color(WebKitWebView* webView, WebKitColor* color)
     g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
     auto& page = webkitWebViewGetPage(webView);
 
-    g_return_if_fail(page.themeColor().isValid());
+    if (!page.themeColor().isValid())
+        return;
+
     webkitColorFillFromWebCoreColor(page.themeColor(), color);
 }
 #endif
