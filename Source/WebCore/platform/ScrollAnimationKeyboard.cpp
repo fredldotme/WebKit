@@ -135,8 +135,8 @@ void ScrollAnimationKeyboard::stopKeyboardScrollAnimation()
     // x = sqrt(v^2 * m / k)
     auto displacementMagnitudeSquared = (m_velocity * m_velocity).scaled(params.springMass / params.springStiffness);
     FloatPoint displacement = {
-        std::copysign(sqrt(displacementMagnitudeSquared.width()), m_velocity.width()),
-        std::copysign(sqrt(displacementMagnitudeSquared.height()), m_velocity.height())
+        static_cast<float>(std::copysign(sqrt(displacementMagnitudeSquared.width()), m_velocity.width())),
+        static_cast<float>(std::copysign(sqrt(displacementMagnitudeSquared.height()), m_velocity.height()))
     };
 
     // If the spring would settle before the minimum travel distance

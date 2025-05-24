@@ -25,6 +25,7 @@
 
 #pragma once
 
+#define CMS_NO_REGISTER_KEYWORD 1
 #include <lcms2.h>
 #include <memory>
 

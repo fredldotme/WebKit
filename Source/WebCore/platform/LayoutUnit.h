@@ -139,7 +139,7 @@ public:
 
     LayoutUnit abs() const
     {
-        return fromRawValue(::abs(m_value));
+        return fromRawValue(std::abs(m_value));
     }
 
     int ceil() const
@@ -215,7 +215,7 @@ public:
 private:
     static bool isInBounds(int value)
     {
-        return ::abs(value) <= std::numeric_limits<int>::max() / kFixedPointDenominator;
+        return std::abs(value) <= std::numeric_limits<int>::max() / kFixedPointDenominator;
     }
     static bool isInBounds(unsigned value)
     {
@@ -223,7 +223,7 @@ private:
     }
     static bool isInBounds(double value)
     {
-        return ::abs(value) <= std::numeric_limits<int>::max() / kFixedPointDenominator;
+        return std::abs(value) <= std::numeric_limits<int>::max() / kFixedPointDenominator;
     }
 
     inline void setValue(int value)

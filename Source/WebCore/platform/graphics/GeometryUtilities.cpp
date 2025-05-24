@@ -246,7 +246,7 @@ RotatedRect rotatedBoundingRectWithMinimumAngleOfRotation(const FloatQuad& quad,
 
     auto leftMidToCenterDistance = (midPointToMidPointDistance + rightMargin - leftMargin) / 2;
     auto center = leftMidPoint + (widthVector * leftMidToCenterDistance / midPointToMidPointDistance);
-    return { center, { width, height }, angle };
+    return { center, { static_cast<float>(width), static_cast<float>(height) }, static_cast<float>(angle) };
 }
 
 float toPositiveAngle(float angle)

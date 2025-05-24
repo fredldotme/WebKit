@@ -137,7 +137,7 @@ Ref<const LayoutShape> makeShapeForShapeOutside(const RenderBox& renderer)
 
     auto margin = [&] {
         auto shapeMargin = floatValueForLength(style.shapeMargin(), containingBlock.contentBoxWidth());
-        return isnan(shapeMargin) ? 0.0f : shapeMargin;
+        return std::isnan(shapeMargin) ? 0.0f : shapeMargin;
     }();
 
 

@@ -161,7 +161,7 @@ static float calculateQuadraticExtremity(float p0, float p1, float p2)
 
     static constexpr float epsilon = 0.1;
 
-    if (abs(k) < epsilon) {
+    if (std::abs(k) < epsilon) {
         float t = 0.5;
         return calculateQuadratic(t, p0, p1, p2);
     }
@@ -266,11 +266,11 @@ static std::pair<float, float> calculateBezierExtremities(float p0, float p1, fl
     static constexpr float epsilon = 0.1;
 
     // Solve for the linear equation bt + c = 0.
-    if (abs(a) < epsilon) {
+    if (std::abs(a) < epsilon) {
         float t;
         // Get the t-coordinate of the quadartic curve vertex. It has to
         // be the mid-point between the current point and the end point.
-        if (abs(b) < epsilon)
+        if (std::abs(b) < epsilon)
             t = 0.5;
         else
             t = -c / b;
@@ -328,7 +328,7 @@ WTF::TextStream& operator<<(WTF::TextStream& ts, const PathBezierCurveTo& data)
 
 static float angleOfLine(const FloatPoint& p1, const FloatPoint& p2)
 {
-    if (abs(p1.x() - p2.x()) < 0.00001)
+    if (std::abs(p1.x() - p2.x()) < 0.00001)
         return p1.y() - p2.y() >= 0 ? piFloat / 2 : 3 * piFloat / 2;
     return atan2(p1.y() - p2.y(), p1.x() - p2.x());
 }
@@ -339,10 +339,10 @@ static FloatPoint calculateArcToEndPoint(const FloatPoint& currentPoint, const F
     float angle2 = angleOfLine(controlPoint1, controlPoint2);
     float angleBteweenLines = angle2 - angle1;
 
-    if (abs(angleBteweenLines) < 0.00001 || abs(angleBteweenLines) >= piFloat / 2)
+    if (std::abs(angleBteweenLines) < 0.00001 || std::abs(angleBteweenLines) >= piFloat / 2)
         return controlPoint1;
 
-    float adjacent = abs(radius / tan(angleBteweenLines / 2));
+    float adjacent = std::abs(radius / tan(angleBteweenLines / 2));
 
     float x = controlPoint1.x() + adjacent * cos(angle2);
     float y = controlPoint1.y() - adjacent * sin(angle2);
@@ -381,8 +381,8 @@ WTF::TextStream& operator<<(WTF::TextStream& ts, const PathArcTo& data)
 
 FloatPoint PathArc::calculateEndPoint(const FloatPoint&, FloatPoint& lastMoveToPoint) const
 {
-    lastMoveToPoint = center + FloatSize { radius * cos(startAngle), - radius * sin(startAngle) };
-    return center + FloatSize { radius * cos(endAngle), - radius * sin(endAngle) };
+    lastMoveToPoint = center + FloatSize { static_cast<float>(radius * cos(startAngle)), - static_cast<float>(radius * sin(startAngle)) };
+    return center + FloatSize { static_cast<float>(radius * cos(endAngle)), - static_cast<float>(radius * sin(endAngle)) };
 }
 
 std::optional<FloatPoint> PathArc::tryGetEndPointWithoutContext() const
@@ -458,7 +458,7 @@ WTF::TextStream& operator<<(WTF::TextStream& ts, const PathArc& data)
 
 FloatPoint PathClosedArc::calculateEndPoint(const FloatPoint&, FloatPoint& lastMoveToPoint) const
 {
-    lastMoveToPoint = arc.center + FloatSize { arc.radius * cos(arc.startAngle), - arc.radius * sin(arc.startAngle) };
+    lastMoveToPoint = arc.center + FloatSize { static_cast<float>(arc.radius * cos(arc.startAngle)), - static_cast<float>(arc.radius * sin(arc.startAngle)) };
     return lastMoveToPoint;
 }
 
@@ -486,8 +486,8 @@ WTF::TextStream& operator<<(WTF::TextStream& ts, const PathClosedArc& data)
 
 FloatPoint PathEllipse::calculateEndPoint(const FloatPoint&, FloatPoint& lastMoveToPoint) const
 {
-    lastMoveToPoint = center + FloatSize { radiusX * cos(startAngle), - radiusY * sin(startAngle) };
-    auto endPoint = center + FloatSize { radiusX * cos(endAngle), - radiusY * sin(endAngle) };
+    lastMoveToPoint = center + FloatSize { static_cast<float>(radiusX * cos(startAngle)), - static_cast<float>(radiusY * sin(startAngle)) };
+    auto endPoint = center + FloatSize { static_cast<float>(radiusX * cos(endAngle)), - static_cast<float>(radiusY * sin(endAngle)) };
     if (!rotation)
         return endPoint;
 
